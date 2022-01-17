@@ -116,7 +116,6 @@ public class GameLoop : SingletonMonoBehavior<GameLoop>
     {
         yield return new WaitForEndOfFrame();
         OnInitialized(EventArgs.Empty);
-        //_deck.SetActive(false);
     }
 
     protected virtual void OnInitialized(EventArgs args)

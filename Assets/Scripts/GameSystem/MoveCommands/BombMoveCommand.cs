@@ -38,10 +38,7 @@ namespace GameSystem.MoveCommands
             List<Tile> tiles = _moveArea.Radius(center, 1);
             tiles.AddRange(_moveArea.Radius(center, 2));
             tiles.AddRange(_moveArea.Radius(center, 3));
-            tiles.AddRange(_moveArea.Radius(center, 0));
-
-            if (!tiles.Contains(hoverTile))
-                return tiles;
+            tiles.Add(hoverTile);
 
             List<Tile> bombTiles = _moveArea.Radius(hoverTile, 1);
             bombTiles.Add(hoverTile);

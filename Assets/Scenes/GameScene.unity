@@ -2455,7 +2455,7 @@ MonoBehaviour:
   _menu: {fileID: 1366656519}
   _startButton: {fileID: 1944757263}
   _gameOver: {fileID: 53524632}
-  _deck: {fileID: 0}
+  _deck: {fileID: 571004027}
 --- !u!4 &729505258
 Transform:
   m_ObjectHideFlags: 0
