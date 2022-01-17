@@ -80,17 +80,17 @@ namespace GameSystem.Views
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            GameLoop.Instance.OnEnterTile(_model);
+            GameLoop.Instance.OnEnteredTile(_model);
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            GameLoop.Instance.OnExitTile(_model);
+            GameLoop.Instance.OnExitedTile(_model);
         }
 
         public void OnDrop(PointerEventData eventData)
         {
-            GameLoop.Instance.OnCardDropped(_model);
+            GameLoop.Instance.OnDropped(_model);
         }
 
         public void Taken()

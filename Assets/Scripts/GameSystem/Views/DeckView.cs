@@ -1,5 +1,5 @@
 using CardSystem;
-using GameSystem.Models.MoveCommands;
+using GameSystem.MoveCommands;
 using System;
 using System.Collections.Generic;
 using UnityEngine;

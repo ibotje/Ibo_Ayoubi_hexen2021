@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
 
-namespace GameSystem.Models.MoveCommands
+namespace GameSystem.MoveCommands
 {
     public class MoveCommandNameAttribute : Attribute
     {

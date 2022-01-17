@@ -4,7 +4,7 @@ using GameSystem.BoardQueries;
 using System;
 using System.Collections.Generic;
 
-namespace GameSystem.Models.MoveCommands
+namespace GameSystem.MoveCommands
 {
     [MoveCommandName("Bomb")]
     public class BombMoveCommand : MoveCommandBase

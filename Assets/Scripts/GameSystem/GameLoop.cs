@@ -1,8 +1,10 @@
 using BoardSystem;
 using CardSystem;
+using GameSystem.GameStates;
 using GameSystem.Models;
-using GameSystem.Models.MoveCommands;
+using GameSystem.MoveCommands;
 using GameSystem.Views;
+using StateSystem;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,15 +18,17 @@ public class GameLoop : SingletonMonoBehavior<GameLoop>
     private PositionHelper _positionHelper;
     public Board<IGamePiece> Board { get; } = new Board<IGamePiece>(3);
 
-    HexenPiece _piece = new HexenPiece();
+    public HexenPiece Piece = new HexenPiece();
 
-    private readonly Deck<MoveCommandBase> _deck = new Deck<MoveCommandBase>();
-    Hand<MoveCommandBase> hand;
-    private MoveCommandBase _draggedMoveCommand;
+    public readonly Deck<MoveCommandBase> Deck = new Deck<MoveCommandBase>();
+    public Hand<MoveCommandBase> Hand;
+    //private MoveCommandBase _draggedMoveCommand;
 
-    private CardView _card;
+    //private CardView _card;
 
-    private List<Tile> _validTiles = new List<Tile>();
+    //private List<Tile> _validTiles = new List<Tile>();
+
+    private StateMachine<GameStateBase> _gameStateMachine;
 
     private void ConnectViewsToModel()
     {
@@ -36,10 +40,10 @@ public class GameLoop : SingletonMonoBehavior<GameLoop>
 
             var tile = Board.TileAt(boardPosition);
 
-            _piece = new HexenPiece();
+            Piece = new HexenPiece();
 
-            Board.Place(tile, _piece);
-            pieceView.Model = _piece;
+            Board.Place(tile, Piece);
+            pieceView.Model = Piece;
         }
         var tileViews = FindObjectsOfType<TileView>();
         foreach (var tileView in tileViews)
@@ -52,60 +56,46 @@ public class GameLoop : SingletonMonoBehavior<GameLoop>
             Board.Set(tile);
         }
     }
+    public void OnCardDragBegin(CardView cardView)
+    => _gameStateMachine.CurrentState.BeginDrag(cardView);
 
-    //fixed
+    public void OnEnteredTile(Tile hoverTile)
+        => _gameStateMachine.CurrentState.EnteredTile(hoverTile);
 
-    internal void OnCardDragBegin(CardView cardView)
-    {
-        _card = cardView;
-        _draggedMoveCommand = _deck.GetMoveCommand(cardView.Model);
-    }
-
-    internal void OnCardDropped(Tile hoverTile)
-    {
-        var tile = Board.TileOf(_piece);
-        if (_draggedMoveCommand.ContainsTile(tile, hoverTile))
-        {
-            _draggedMoveCommand.OnDropTile(tile, hoverTile);
-            hand.RemoveCard(_card.Model);
-            hand.FillHand();
-        }
-    }
-
-    internal void OnEnterTile(Tile hoverTile)
-    {
-        if (_draggedMoveCommand != null)
-        {
-            var tile = Board.TileOf(_piece);
-            _validTiles = _draggedMoveCommand.OnHoverTile(tile, hoverTile);
-            Board.HighLight(_validTiles);
-        }
-    }
-
-    internal void OnExitTile(Tile hoverTile)
-    {
-        Board.Unhighlight(_validTiles);
-        _validTiles.Clear();
-    }
+    public void OnExitedTile(Tile hoverTile)
+    => _gameStateMachine.CurrentState.ExitedTile(hoverTile);
+    public void OnDropped(Tile hoverTile)
+        => _gameStateMachine.CurrentState.Dropped(hoverTile);
 
     private void Start()
     {
         Board<IGamePiece> board = Board;
-        _deck.RegisterMoveCommand("ForwardAttack", new ForwardAttackMoveCommand(board));
-        _deck.RegisterMoveCommand("SwipeAttack", new SwipeAttackMoveCommand(board));
-        _deck.RegisterMoveCommand("Teleport", new TeleportMoveCommand(board));
-        _deck.RegisterMoveCommand("Pushback", new PushbackMoveCommand(board));
-        _deck.RegisterMoveCommand("Bomb", new BombMoveCommand(board));
-        _deck.AddCard("ForwardAttack", 3);
-        _deck.AddCard("SwipeAttack", 3);
-        _deck.AddCard("Teleport", 3);
-        _deck.AddCard("Pushback", 3);
-        _deck.AddCard("Bomb", 3);
-        hand = _deck.CreateHand(5);
-        ConnectToDeck(hand);
+        Deck.RegisterMoveCommand("ForwardAttack", new ForwardAttackMoveCommand(board));
+        Deck.RegisterMoveCommand("SwipeAttack", new SwipeAttackMoveCommand(board));
+        Deck.RegisterMoveCommand("Teleport", new TeleportMoveCommand(board));
+        Deck.RegisterMoveCommand("Pushback", new PushbackMoveCommand(board));
+        Deck.RegisterMoveCommand("Bomb", new BombMoveCommand(board));
+        Deck.AddCard("ForwardAttack", 3);
+        Deck.AddCard("SwipeAttack", 3);
+        Deck.AddCard("Teleport", 3);
+        Deck.AddCard("Pushback", 3);
+        Deck.AddCard("Bomb", 3);
+        Hand = Deck.CreateHand(5);
+        ConnectToDeck(Hand);
         ConnectViewsToModel();
+
+        _gameStateMachine = new StateMachine<GameStateBase>();
+        _gameStateMachine.Register(GameStateBase.StartState, new StartGameState(_gameStateMachine));
+        _gameStateMachine.Register(GameStateBase.PlayingState, new PlayingGameState(_gameStateMachine));
+        _gameStateMachine.Register(GameStateBase.GameOverState, new GameOverGameState(_gameStateMachine));
+
+        _gameStateMachine.InitialState = GameStateBase.StartState;
+
         StartCoroutine(OnPostStart());
     }
+
+    public void Started()
+=> _gameStateMachine.CurrentState.Started();
 
     private void ConnectToDeck(Hand<MoveCommandBase> hand)
     {

@@ -3,7 +3,7 @@ using GameSystem.Models;
 using System;
 using System.Collections.Generic;
 
-namespace GameSystem.Models.MoveCommands
+namespace GameSystem.MoveCommands
 {
     [MoveCommandName("Teleport")]
     public class TeleportMoveCommand : MoveCommandBase

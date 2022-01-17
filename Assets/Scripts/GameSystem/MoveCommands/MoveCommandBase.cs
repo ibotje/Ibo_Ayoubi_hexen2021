@@ -2,7 +2,7 @@ using BoardSystem;
 using System;
 using System.Collections.Generic;
 
-namespace GameSystem.Models.MoveCommands
+namespace GameSystem.MoveCommands
 {
     public abstract class MoveCommandBase
     {
