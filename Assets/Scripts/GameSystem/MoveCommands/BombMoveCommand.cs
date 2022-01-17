@@ -27,9 +27,8 @@ namespace GameSystem.Models.MoveCommands
             List<Tile> tiles = OnHoverTile(playerTile, hoverTile);
             foreach (Tile tile in tiles)
             {
-                if (_board.PieceAt(tile) == null)
-                    continue;
                 _board.Take(tile);
+                _board.Remove(tile);
             }
         }
 
@@ -44,18 +43,9 @@ namespace GameSystem.Models.MoveCommands
             if (!tiles.Contains(hoverTile))
                 return tiles;
 
-            int num = tiles.IndexOf(hoverTile);
-
-            //int num1 = ModuloCalc(num - 1, tiles.Count - 1);
-            //int num2 = ModuloCalc(num + 1, tiles.Count - 1);
-            //return new List<Tile>() { tiles[num], tiles[num], tiles[num] };
             List<Tile> bombTiles = _moveArea.Radius(hoverTile, 1);
             bombTiles.Add(hoverTile);
             return bombTiles;
-        }
-        private int ModuloCalc(int number, int mod)
-        {
-            return (number % mod + mod) % mod;
         }
 
         public override bool ContainsTile(Tile playerTile, Tile hoverTile)

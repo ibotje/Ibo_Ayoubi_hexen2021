@@ -9,6 +9,7 @@ namespace BoardSystem
 
         private List<TPiece> _values = new List<TPiece>();
         private List<Tile> _keys = new List<Tile>();
+        private List<Tile> _points = new List<Tile>();
 
         public IList<Tile> Tiles => _tiles.Values.ToList();
 
@@ -26,6 +27,21 @@ namespace BoardSystem
             piece.Taken();
 
             return piece;
+        }
+
+        public Tile Remove(Tile fromTile)
+        {
+            var idx = _points.IndexOf(fromTile);
+            if (idx == -1)
+                return null;
+
+            var tile = _points[idx];
+
+            _points.RemoveAt(idx);
+
+            tile.Taken();
+
+            return tile;
         }
 
         public void Move(Tile fromTile, Tile toTile)
@@ -53,6 +69,14 @@ namespace BoardSystem
 
             _keys.Add(toTile);
             _values.Add(piece);
+        }
+
+        public void Set(Tile toTile)
+        {
+            if (_points.Contains(toTile))
+                return;
+
+            _points.Add(toTile);
         }
 
         public readonly int GridSize;

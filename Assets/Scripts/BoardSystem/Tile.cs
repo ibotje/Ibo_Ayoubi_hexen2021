@@ -5,7 +5,7 @@ namespace BoardSystem
     public class Tile
     {
         public event EventHandler HighlightStatusChanged;
-
+        public event EventHandler TileTaken;
         public Position Position { get; }
         public Tile(Position position)
         {
@@ -27,6 +27,17 @@ namespace BoardSystem
         {
             EventHandler handler = HighlightStatusChanged;
             handler?.Invoke(this, args);
+        }
+
+        internal void Taken()
+        {
+            OnHexenPieceTaken(EventArgs.Empty);
+        }
+
+        protected virtual void OnHexenPieceTaken(EventArgs arg)
+        {
+            EventHandler handler = TileTaken;
+            handler?.Invoke(this, arg);
         }
     }
 }

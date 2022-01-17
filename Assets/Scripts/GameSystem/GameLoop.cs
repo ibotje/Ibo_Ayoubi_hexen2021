@@ -41,6 +41,16 @@ public class GameLoop : SingletonMonoBehavior<GameLoop>
             Board.Place(tile, _piece);
             pieceView.Model = _piece;
         }
+        var tileViews = FindObjectsOfType<TileView>();
+        foreach (var tileView in tileViews)
+        {
+            var worldPosition = tileView.transform.position;
+            var boardPosition = _positionHelper.ToBoardPosition(worldPosition);
+
+            var tile = Board.TileAt(boardPosition);
+
+            Board.Set(tile);
+        }
     }
 
     //fixed

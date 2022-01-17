@@ -37,11 +37,19 @@ namespace GameSystem.Views
             set
             {
                 if (_model != null)
+                {
                     _model.HighlightStatusChanged -= ModelHighLightStatusChanged;
+                    _model.TileTaken -= ModelTaken;
+                }
+
 
                 _model = value;
                 if (_model != null)
+                {
                     _model.HighlightStatusChanged += ModelHighLightStatusChanged;
+                    _model.TileTaken += ModelTaken;
+                }
+
             }
         }
 
@@ -83,6 +91,15 @@ namespace GameSystem.Views
         public void OnDrop(PointerEventData eventData)
         {
             GameLoop.Instance.OnCardDropped(_model);
+        }
+
+        public void Taken()
+        {
+
+        }
+        private void ModelTaken(object sender, EventArgs e)
+        {
+            Destroy(this.gameObject);
         }
 
         private void OnDestroy()
