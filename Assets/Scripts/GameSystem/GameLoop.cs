@@ -85,10 +85,12 @@ public class GameLoop : SingletonMonoBehavior<GameLoop>
         _deck.RegisterMoveCommand("SwipeAttack", new SwipeAttackMoveCommand(board));
         _deck.RegisterMoveCommand("Teleport", new TeleportMoveCommand(board));
         _deck.RegisterMoveCommand("Pushback", new PushbackMoveCommand(board));
+        _deck.RegisterMoveCommand("Bomb", new BombMoveCommand(board));
         _deck.AddCard("ForwardAttack", 3);
         _deck.AddCard("SwipeAttack", 3);
         _deck.AddCard("Teleport", 3);
         _deck.AddCard("Pushback", 3);
+        _deck.AddCard("Bomb", 3);
         hand = _deck.CreateHand(5);
         ConnectToDeck(hand);
         ConnectViewsToModel();

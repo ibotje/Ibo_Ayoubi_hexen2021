@@ -1,5 +1,6 @@
 using BoardSystem;
 using GameSystem.Models;
+using System;
 using System.Collections.Generic;
 
 namespace GameSystem.BoardQueries
