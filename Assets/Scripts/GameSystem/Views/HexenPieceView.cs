@@ -42,7 +42,11 @@ namespace GameSystem.Views
         private void ModelTaken(object sender, EventArgs e)
         {
             if (this.gameObject.tag == "Player")
+            {
                 Debug.Log("player taken");
+                GameLoop.Instance.Ended();
+            }
+
             Destroy(this.gameObject);
         }
 

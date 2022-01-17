@@ -16,17 +16,25 @@ public class GameLoop : SingletonMonoBehavior<GameLoop>
     public event EventHandler Initalized;
     [SerializeField]
     private PositionHelper _positionHelper;
+
+    [SerializeField]
+    private GameObject _menu;
+
+    [SerializeField]
+    private GameObject _startButton;
+
+    [SerializeField]
+    private GameObject _gameOver;
+
+    [SerializeField]
+    private GameObject _deck;
+
     public Board<IGamePiece> Board { get; } = new Board<IGamePiece>(3);
 
     public HexenPiece Piece = new HexenPiece();
 
     public readonly Deck<MoveCommandBase> Deck = new Deck<MoveCommandBase>();
     public Hand<MoveCommandBase> Hand;
-    //private MoveCommandBase _draggedMoveCommand;
-
-    //private CardView _card;
-
-    //private List<Tile> _validTiles = new List<Tile>();
 
     private StateMachine<GameStateBase> _gameStateMachine;
 
@@ -85,9 +93,9 @@ public class GameLoop : SingletonMonoBehavior<GameLoop>
         ConnectViewsToModel();
 
         _gameStateMachine = new StateMachine<GameStateBase>();
-        _gameStateMachine.Register(GameStateBase.StartState, new StartGameState(_gameStateMachine));
+        _gameStateMachine.Register(GameStateBase.StartState, new StartGameState(_gameStateMachine, _menu , _startButton, _deck));
         _gameStateMachine.Register(GameStateBase.PlayingState, new PlayingGameState(_gameStateMachine));
-        _gameStateMachine.Register(GameStateBase.GameOverState, new GameOverGameState(_gameStateMachine));
+        _gameStateMachine.Register(GameStateBase.GameOverState, new GameOverGameState(_gameStateMachine, _menu, _gameOver));
 
         _gameStateMachine.InitialState = GameStateBase.StartState;
 
@@ -96,6 +104,8 @@ public class GameLoop : SingletonMonoBehavior<GameLoop>
 
     public void Started()
 => _gameStateMachine.CurrentState.Started();
+    public void Ended()
+=> _gameStateMachine.CurrentState.Ended();
 
     private void ConnectToDeck(Hand<MoveCommandBase> hand)
     {
@@ -106,6 +116,7 @@ public class GameLoop : SingletonMonoBehavior<GameLoop>
     {
         yield return new WaitForEndOfFrame();
         OnInitialized(EventArgs.Empty);
+        //_deck.SetActive(false);
     }
 
     protected virtual void OnInitialized(EventArgs args)

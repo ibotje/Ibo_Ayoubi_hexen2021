@@ -7,15 +7,18 @@ namespace GameSystem.GameStates
 {
     class GameOverGameState : GameStateBase
     {
-
-        public GameOverGameState(StateMachine<GameStateBase> stateMachine) : base(stateMachine)
+        private GameObject _startMenu;
+        private GameObject _gameOverText;
+        public GameOverGameState(StateMachine<GameStateBase> stateMachine, GameObject StartMenu, GameObject GameOverText) : base(stateMachine)
         {
-            //_replayManager = replayManager;
+            _startMenu = StartMenu;
+            _gameOverText = GameOverText;
         }
 
         public override void OnEnter()
         {
-            //Backward();
+            _startMenu.SetActive(true);
+            _gameOverText.SetActive(true);
         }
     }
 }

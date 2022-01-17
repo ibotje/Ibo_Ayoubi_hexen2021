@@ -16,7 +16,7 @@ namespace GameSystem.GameStates
         private List<Tile> _validTiles = new List<Tile>();
         public PlayingGameState(StateMachine<GameStateBase> stateMachine) : base(stateMachine)
         {
-            //_replayManager = replayManager;
+
         }
 
         public override void BeginDrag(CardView cardView)
@@ -50,6 +50,11 @@ namespace GameSystem.GameStates
         {
             GameLoop.Instance.Board.Unhighlight(_validTiles);
             _validTiles.Clear();
+        }
+
+        public override void Ended()
+        {
+            StateMachine.MoveTo(GameOverState);
         }
     }
 }
