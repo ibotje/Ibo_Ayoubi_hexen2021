@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 04908d61bf5e1194d80eb0f45f5b121e
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - _TileView: {fileID: -7788641671761169255, guid: d6f5f70bb6922ad4186aeeab8955ff68, type: 3}
+  - _positionHelper: {fileID: 11400000, guid: 23aa601d8bd7b4444b84a2a669f44466, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
